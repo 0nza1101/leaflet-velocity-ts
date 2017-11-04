@@ -28,7 +28,7 @@ export default class Windy {
     constructor(options: any) {
         this.canvas = options.canvas;
         this.colorScale = new ColorScale(options.minVelocity, options.maxVelocity, options.colorScale);
-        this.velocityScale = options.velocityScale;
+        this.velocityScale = options.velocityScale || 0.01;
         this.particleAge = options.particleAge || 64;
         this.setData(options.data);
         this.particuleMultiplier = options.particleMultiplier || 1/300;
@@ -88,7 +88,11 @@ export default class Windy {
 
     getParticuleWind(p: Particule): Vector {
         const lngLat = this.currentMapBound.canvasToMap(p.x, p.y);
-        return this.grid.get(lngLat[0], lngLat[1]);
+        const wind = this.grid.get(lngLat[0], lngLat[1]);
+        const mapArea = this.currentMapBound.height * this.currentMapBound.width;
+        var velocityScale = this.velocityScale * Math.pow(mapArea, 0.4);
+        this.currentMapBound.distort(lngLat[0], lngLat[1], p.x, p.y, velocityScale, wind);
+        return wind;
     }
 
     start(mapBound: MapBound) {

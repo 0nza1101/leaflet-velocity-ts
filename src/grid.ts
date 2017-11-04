@@ -30,25 +30,25 @@ export default class Grid {
 
         const iλ = Math.floor(fλ) // col n
         let jλ = iλ + 1;        // col n+1
-        if (jλ > this.width) {
-            jλ = iλ;
+        if (jλ >= this.width) {
+            jλ = this.λ0;
         }
         const iφ = Math.floor(fφ) // line m
         let jφ = iφ + 1;        // line m+1
-        if (jφ > this.height) {
+        if (jφ >= this.height) {
             jφ = iφ;
         }
 
         const vλ = fλ - iλ;   // col variation [0..1]
         const vφ = fφ - iφ;   // line variation [0..1]
 
-        if (iλ>0 && iφ>0 && iλ<this.width && iφ<this.height) {
+        if (iλ>=0 && iφ>=0 && iλ<this.width && iφ<this.height) {
             return this.interpolation (
                 vλ,
                 vφ,
                 this.data[iλ + iφ * this.width], //l0c0
-                this.data[iλ + jφ * this.width], //l1c0 
                 this.data[jλ + iφ * this.width], //l0c1
+                this.data[iλ + jφ * this.width], //l1c0 
                 this.data[jλ + jφ * this.width]  //l1cl
             );
         }

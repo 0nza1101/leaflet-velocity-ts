@@ -1,4 +1,5 @@
 import CanvasBound from "./canvasBound";
+import Vector from "./vector";
 
 export default class MapBound {
     public south: number;
@@ -8,10 +9,10 @@ export default class MapBound {
     public canvasBound: CanvasBound;
 
     constructor (north: number, east: number, south: number, west: number, canvasBound: CanvasBound) {
-        this.north = north;
-        this.east = east;
-        this.south = south;
-        this.west = west;
+        this.north = this.deg2rad(north);
+        this.east = this.deg2rad(east);
+        this.south = this.deg2rad(south);
+        this.west = this.deg2rad(west);
         this.canvasBound = canvasBound;
     }
 
@@ -27,7 +28,7 @@ export default class MapBound {
       return deg * Math.PI / 180;
     };
 
-      rad2deg (rad: number): number {
+    rad2deg (rad: number): number {
       return rad * 180 / Math.PI;
     };
 
@@ -39,7 +40,7 @@ export default class MapBound {
      */
     canvasToMap (x: number, y: number): number[] {
       const mapLonDelta = this.east - this.west;
-      const worldMapRadius = this.canvasBound.width / this.rad2deg(mapLonDelta) * 360/(2 * Math.PI);
+      const worldMapRadius = (this.canvasBound.width / this.rad2deg(mapLonDelta)) * 360/(2 * Math.PI);
       const mapOffsetY = ( worldMapRadius / 2 * Math.log( (1 + Math.sin(this.south) ) / (1 - Math.sin(this.south))  ));
       const equatorY = this.canvasBound.height + mapOffsetY;
       const a = (equatorY-y)/worldMapRadius;
@@ -86,8 +87,8 @@ export default class MapBound {
 		const hλ = λ < 0 ? H : -H;
 		const hφ = φ < 0 ? H : -H;
 
-		const pλ = this.mapToCanvas(φ, λ + hλ);
-		const pφ = this.mapToCanvas(φ + hφ, λ);
+		const pλ = this.mapToCanvas(λ + hλ, φ);
+		const pφ = this.mapToCanvas(λ, φ + hφ);
 
 		// Meridian scale factor (see Snyder, equation 4-3), where R = 1. This handles issue where length of 1º λ
 		// changes depending on φ. Without this, there is a pinching effect at the poles.
@@ -98,7 +99,7 @@ export default class MapBound {
 			(pφ[0] - x) / hφ,
 			(pφ[1] - y) / hφ
 		];
-    }
+  }
     
     /**
 	 * Calculate distortion of the wind vector caused by the shape of the projection at point (x, y). The wind
@@ -111,14 +112,14 @@ export default class MapBound {
      * @param wind [u, v]
      * @return []
 	 */
-	distort (λ: number, φ: number, x: number, y: number, scale: number, wind: number[]): number[] {
-		const u = wind[0] * scale;
-		const v = wind[1] * scale;
+	distort (λ: number, φ: number, x: number, y: number, scale: number, wind: Vector): Vector {
+		const u = wind.u * scale;
+		const v = wind.v * scale;
 		const d = this.distortion(λ, φ, x, y);
 
 		// Scale distortion vectors by u and v, then add.
-		wind[0] = d[0] * u + d[2] * v;
-		wind[1] = d[1] * u + d[3] * v;
+		wind.u = d[0] * u + d[2] * v;
+		wind.v = d[1] * u + d[3] * v;
 		return wind;
     }
 
