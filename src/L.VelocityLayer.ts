@@ -87,7 +87,7 @@ export default class VelocityLayer {
 		// bounds, width, height, extent
 		this._windy.start(
 			new CanvasBound(0,0,size.x, size.y),
-			new MapBound(bounds._northEast.lat, bounds._northEast.lng, bounds._southWest.lat, bounds._southWest.lng)
+			new MapBound(bounds._northEast.lat, bounds._northEast.lng, bounds._southWest.lat, bounds._southWest.lng, size.x, size.y)
 		);
 	}
 

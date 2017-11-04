@@ -18,7 +18,7 @@ var velocity = L.velocityLayer({
 		displayEmptyString: 'No velocity data',
 		speedUnit: 'kt'
 	},
-	data: [],             // see demo/*.json, or wind-js-server for example data service
+	data: data,             // see demo/*.json, or wind-js-server for example data service
 	
 	// OPTIONAL
 	minVelocity: 0,          // used to align color scale
@@ -29,6 +29,6 @@ var velocity = L.velocityLayer({
 
 velocity.addTo(mymap);
 
-setTimeout(function () {
-	velocity.setData([]);
-}, 2000);
+/*setTimeout(function () {
+	velocity.setData(data);
+}, 2000);*/
