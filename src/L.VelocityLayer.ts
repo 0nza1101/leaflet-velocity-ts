@@ -65,7 +65,7 @@ export default class VelocityLayer {
 		var self = this;
 
 		if (!this._windy) {
-			this._initWindy(this);
+			this._initWindy();
 			return;
 		}
 
@@ -86,15 +86,20 @@ export default class VelocityLayer {
 
 		// bounds, width, height, extent
 		this._windy.start(
-			new CanvasBound(0,0,size.x, size.y),
-			new MapBound(bounds._northEast.lat, bounds._northEast.lng, bounds._southWest.lat, bounds._southWest.lng, size.x, size.y)
+			new MapBound(
+				bounds._northEast.lat,
+				bounds._northEast.lng,
+				bounds._southWest.lat,
+				bounds._southWest.lng,
+				new CanvasBound(0,0,size.x, size.y)
+			)
 		);
 	}
 
-	_initWindy(self: VelocityLayer) {
+	_initWindy() {
 
 		// windy object, copy options
-		const options = (<any>Object).assign({ canvas: self._canvasLayer._canvas }, self.options);
+		const options = (<any>Object).assign({ canvas: this._canvasLayer._canvas }, this.options);
 		this._windy = new Windy(options);
 
 		// prepare context global var, start drawing
@@ -102,11 +107,24 @@ export default class VelocityLayer {
 		this._canvasLayer._canvas.classList.add("velocity-overlay");
 		(<any>this).onDrawLayer();
 
-		this._map.on('dragstart', self._windy.stop);
-		this._map.on('dragend', self._clearAndRestart);
-		this._map.on('zoomstart', self._windy.stop);
-		this._map.on('zoomend', self._clearAndRestart);
-		this._map.on('resize', self._clearWind);
+		this._map.on('dragstart',() => {
+			this._windy.stop();
+		});
+
+		this._map.on('dragend', () => {
+			this._clearAndRestart();
+		});
+
+		this._map.on('zoomstart', () => {
+			this._windy.stop();
+		});
+
+		this._map.on('zoomend', () => {
+			this._clearAndRestart();
+		});
+		this._map.on('resize', () => {
+			this._clearWind();
+		});
 	}
 
 

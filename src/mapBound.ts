@@ -1,19 +1,18 @@
+import CanvasBound from "./canvasBound";
 
 export default class MapBound {
     public south: number;
     public north: number;
     public east: number;
     public west: number;
-    public pixWidth: number;
-    public pixHeight: number;
+    public canvasBound: CanvasBound;
 
-    constructor (north: number, east: number, south: number, west: number, pixWidth: number, pixHeight: number) {
+    constructor (north: number, east: number, south: number, west: number, canvasBound: CanvasBound) {
         this.north = north;
         this.east = east;
         this.south = south;
         this.west = west;
-        this.pixWidth = pixWidth;
-        this.pixHeight = pixHeight;
+        this.canvasBound = canvasBound;
     }
 
     get width () : number {
@@ -25,12 +24,12 @@ export default class MapBound {
     }
 
     deg2rad (deg: number): number {
-		return deg * Math.PI / 180;
-	};
+      return deg * Math.PI / 180;
+    };
 
-    rad2deg (rad: number): number {
-		return rad * 180 / Math.PI;
-	};
+      rad2deg (rad: number): number {
+      return rad * 180 / Math.PI;
+    };
 
     /**
      * Find geocoordinate from canvas point
@@ -39,19 +38,19 @@ export default class MapBound {
      * return [lng, lat]
      */
     canvasToMap (x: number, y: number): number[] {
-		const mapLonDelta = this.east - this.west;
-		const worldMapRadius = this.pixWidth / this.rad2deg(mapLonDelta) * 360/(2 * Math.PI);
-		const mapOffsetY = ( worldMapRadius / 2 * Math.log( (1 + Math.sin(this.south) ) / (1 - Math.sin(this.south))  ));
-		const equatorY = this.pixHeight + mapOffsetY;
-		const a = (equatorY-y)/worldMapRadius;
+      const mapLonDelta = this.east - this.west;
+      const worldMapRadius = this.canvasBound.width / this.rad2deg(mapLonDelta) * 360/(2 * Math.PI);
+      const mapOffsetY = ( worldMapRadius / 2 * Math.log( (1 + Math.sin(this.south) ) / (1 - Math.sin(this.south))  ));
+      const equatorY = this.canvasBound.height + mapOffsetY;
+      const a = (equatorY-y)/worldMapRadius;
 
-		const φ = 180/Math.PI * (2 * Math.atan(Math.exp(a)) - Math.PI/2);
-		const λ = this.rad2deg(this.west) + x / this.pixWidth * this.rad2deg(mapLonDelta);
-		return [λ, φ];
+      const φ = 180/Math.PI * (2 * Math.atan(Math.exp(a)) - Math.PI/2);
+      const λ = this.rad2deg(this.west) + x / this.canvasBound.width * this.rad2deg(mapLonDelta);
+      return [λ, φ];
     };
     
     mercY (φ: number): number {
-		return Math.log( Math.tan( φ / 2 + Math.PI / 4 ) );
+		  return Math.log( Math.tan( φ / 2 + Math.PI / 4 ) );
     };
     
     /**
@@ -61,15 +60,15 @@ export default class MapBound {
      * @return [x, y]
      */
     mapToCanvas (λ: number, φ: number): number[] {
-		const ymin = this.mercY(this.south);
-		const ymax = this.mercY(this.north);
-		const xFactor = this.pixWidth / ( this.east - this.west );
-		const yFactor = this.pixHeight / ( ymax - ymin );
+      const ymin = this.mercY(this.south);
+      const ymax = this.mercY(this.north);
+      const xFactor = this.canvasBound.width / ( this.east - this.west );
+      const yFactor = this.canvasBound.height / ( ymax - ymin );
 
-		let y = this.mercY(this.deg2rad(φ) );
-		const x = (this.deg2rad(λ) - this.west) * xFactor;
-		y = (ymax - y) * yFactor;
-		return [x, y];
+      let y = this.mercY(this.deg2rad(φ) );
+      const x = (this.deg2rad(λ) - this.west) * xFactor;
+      y = (ymax - y) * yFactor;
+      return [x, y];
     };
 
 
