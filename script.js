@@ -21,8 +21,8 @@ var velocity = L.velocityLayer({
 	data: data,             // see demo/*.json, or wind-js-server for example data service
 	
 	// OPTIONAL
-	minVelocity: 0,          // used to align color scale
-	maxVelocity: 10,         // used to align color scale
+	/*minVelocity: 0,          // used to align color scale
+	maxVelocity: 10,         // used to align color scale*/
 	velocityScale: 0.005,    // modifier for particle animations, arbitrarily defaults to 0.005
 	colorScale: []          // define your own array of hex/rgb colors
 });

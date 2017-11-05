@@ -1,6 +1,7 @@
 import Windy from './windy';
 import CanvasBound from './canvasBound'
 import MapBound from './mapBound';
+import Layer from "./layer";
 import CanvasLayer from './L.CanvasLayer';
 import * as L from 'leaflet';
 
@@ -86,13 +87,16 @@ export default class VelocityLayer {
 
 		// bounds, width, height, extent
 		this._windy.start(
-			new MapBound(
-				bounds._northEast.lat,
-				bounds._northEast.lng,
-				bounds._southWest.lat,
-				bounds._southWest.lng,
+			new Layer(
+				new MapBound(
+					bounds._northEast.lat,
+					bounds._northEast.lng,
+					bounds._southWest.lat,
+					bounds._southWest.lng
+				),
 				new CanvasBound(0,0,size.x, size.y)
 			)
+			
 		);
 	}
 

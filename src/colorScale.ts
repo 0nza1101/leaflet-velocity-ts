@@ -20,11 +20,15 @@ export default class ColorScale {
     private maxValue: number;
 
     constructor(minValue: number, maxValue: number, scale?: string[]) {
-        this.minValue = minValue;
-        this.maxValue = maxValue;
+        this.setMinMax(minValue, maxValue);
         if ((scale instanceof Array) && scale.length) {
             this.scale = scale;
         }
+    }
+
+    setMinMax (minValue: number, maxValue: number) {
+        this.minValue = minValue;
+        this.maxValue = maxValue;
     }
 
     get size () {
@@ -39,6 +43,12 @@ export default class ColorScale {
             return this.scale.length-1;
         }
         const index = this.scale.length * (value - this.minValue) / (this.maxValue - this.minValue);
+        if (index <0) {
+            return 0;
+        }
+        if (index> this.scale.length-1) {
+            return this.scale.length-1;
+        }
         return Math.floor(index);
     }
 

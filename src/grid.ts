@@ -19,6 +19,18 @@ export default class Grid {
         this.width = width;
     }
 
+    get valueRange () : number[] {
+        if (!this.data.length) {
+            return [0, 0];
+        }
+        let min = this.data[0].intensity;
+        let max = this.data[0].intensity;
+        this.data.forEach((value: Vector) => {
+            min = Math.min(min, value.intensity);
+            max = Math.max(max, value.intensity);
+        });
+        return [min, max];
+    }
     /**
      * Get vector at any point
      * @param λ Longitude

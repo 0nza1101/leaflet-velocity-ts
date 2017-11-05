@@ -5,6 +5,7 @@ export default class Particule {
     public maxAge: number;
     public xt: number;
     public yt: number;
+    public intensity: number;
 
     constructor(x: number, y: number, maxAge: number) {
         this.x = x;

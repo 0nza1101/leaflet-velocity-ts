@@ -5,6 +5,7 @@ import ColorScale from "./colorScale";
 import CanvasBound from "./canvasBound";
 import Particule from "./particle";
 import AnimationBucket from "./animationBucket";
+import Layer from "./layer";
 
 export default class Windy {
 
@@ -15,8 +16,9 @@ export default class Windy {
     private particuleMultiplier =  1 / 300;
     private particleAge: number;
     private particuleLineWidth: number;
+    private autoColorRange = false;
     
-    private currentMapBound: MapBound;
+    private layer: Layer;
     private particules: Particule[] = [];
     private animationBucket: AnimationBucket;
     private context2D: any;
@@ -27,7 +29,10 @@ export default class Windy {
 
     constructor(options: any) {
         this.canvas = options.canvas;
-        this.colorScale = new ColorScale(options.minVelocity, options.maxVelocity, options.colorScale);
+        if (options.minVelocity === undefined && options.maxVelocity === undefined) {
+            this.autoColorRange = true;
+        }
+        this.colorScale = new ColorScale(options.minVelocity ||0, options.maxVelocity ||10, options.colorScale);
         this.velocityScale = options.velocityScale || 0.01;
         this.particleAge = options.particleAge || 64;
         this.setData(options.data);
@@ -35,12 +40,11 @@ export default class Windy {
         this.particuleLineWidth  = options.lineWidth || 1;
         const frameRate = options.frameRate || 15;
         this.frameTime = 1000 / frameRate;
-        console.log("[Constructor]", this);
     }
 
     get particuleCount () {
         const particuleReduction = ((/android|blackberry|iemobile|ipad|iphone|ipod|opera mini|webos/i).test(navigator.userAgent)) ? (Math.pow(window.devicePixelRatio,1/3) || 1.6): 1;
-        return Math.round(this.currentMapBound.canvasBound.width * this.currentMapBound.canvasBound.height * this.particuleMultiplier) * particuleReduction;
+        return Math.round(this.layer.canvasBound.width * this.layer.canvasBound.height * this.particuleMultiplier) * particuleReduction;
     }
 
     /**
@@ -67,7 +71,7 @@ export default class Windy {
         });
 
         if (!uData || !vData) {
-            console.warn("Data are not correct");
+            console.warn("Data are not correct format");
             return;
         }
 
@@ -84,37 +88,41 @@ export default class Windy {
             uData.header.ny,
             uData.header.nx
         );
+
+        if (this.autoColorRange) {
+            const minMax = this.grid.valueRange;
+            this.colorScale.setMinMax(minMax[0], minMax[1]);
+        }
     }
 
     getParticuleWind(p: Particule): Vector {
-        const lngLat = this.currentMapBound.canvasToMap(p.x, p.y);
+        const lngLat = this.layer.canvasToMap(p.x, p.y);
         const wind = this.grid.get(lngLat[0], lngLat[1]);
-        const mapArea = this.currentMapBound.height * this.currentMapBound.width;
+        p.intensity = wind.intensity;
+        const mapArea = this.layer.mapBound.height * this.layer.mapBound.width;
         var velocityScale = this.velocityScale * Math.pow(mapArea, 0.4);
-        this.currentMapBound.distort(lngLat[0], lngLat[1], p.x, p.y, velocityScale, wind);
+        this.layer.distort(lngLat[0], lngLat[1], p.x, p.y, velocityScale, wind);
         return wind;
     }
 
-    start(mapBound: MapBound) {
+    start(layer: Layer) {
 
         this.context2D = this.canvas.getContext("2d");
 		this.context2D.lineWidth = this.particuleLineWidth;
 		this.context2D.fillStyle = "rgba(0, 0, 0, 0.97)";
         this.context2D.globalAlpha = 0.6;
         
-        this.currentMapBound = mapBound;
+        this.layer = layer;
         this.animationBucket = new AnimationBucket(this.colorScale);
 
         this.particules.splice(0, this.particules.length);
         for(let i=0; i<this.particuleCount; i++) {
-            this.particules.push(this.currentMapBound.canvasBound.getRandomParticule(this.particleAge));
+            this.particules.push(this.layer.canvasBound.getRandomParticule(this.particleAge));
         }
 
         this.then = new Date().getTime();
 
         this.frame();
-
-        console.log("[Start]", mapBound);
     }
 
     frame () {
@@ -135,7 +143,7 @@ export default class Windy {
         this.particules.forEach((p: Particule) => {
             p.grow();
             if (p.isDead) {
-                this.currentMapBound.canvasBound.resetParticule(p);
+                this.layer.canvasBound.resetParticule(p);
             }
             const wind = this.getParticuleWind(p);
             this.animationBucket.add(p, wind);
@@ -145,10 +153,10 @@ export default class Windy {
     draw () {
         this.context2D.globalCompositeOperation = "destination-in";
         this.context2D.fillRect(
-            this.currentMapBound.canvasBound.xMin,
-            this.currentMapBound.canvasBound.yMin,
-            this.currentMapBound.canvasBound.width,
-            this.currentMapBound.canvasBound.height
+            this.layer.canvasBound.xMin,
+            this.layer.canvasBound.yMin,
+            this.layer.canvasBound.width,
+            this.layer.canvasBound.height
         );
         // Fade existing particle trails.
         this.context2D.globalCompositeOperation = "lighter";
@@ -157,14 +165,13 @@ export default class Windy {
         this.animationBucket.draw(this.context2D);
     }
 
-    stop(...args: any[]) {
+    stop() {
         this.particules.splice(0, this.particules.length);
         this.animationBucket.clear();
         if (this.animationLoop) {
             clearTimeout(this.animationLoop);
             this.animationLoop = null;
         }
-        console.log("[Stop]", args);
     }
 
 }
