@@ -157,32 +157,17 @@ export default class Windy {
     var i = this.floorMod(λ - this.λ0, 360) / this.Δλ; // calculate longitude index in wrapped range [0, 360)
     var j = (this.φ0 - φ) / this.Δφ; // calculate latitude index in direction +90 to -90
 
-    //console.log("i", i);
-    //console.log("j", j);
-
     var fi = Math.floor(i);
     var ci = fi + 1;
-    //console.log("fi", fi);
-    //console.log("ci", ci);
     var fj = Math.floor(j);
     var cj = fj + 1;
-    //console.log("fj", fi);
-    //console.log("cj", ci);
-
-    //console.log('grid', this.grid);
-
     var row = this.grid[fj];//Dont know why he dosent found any row ERRRROR
-    //console.log('row', row);
     if (row) {
       var g00 = row[fi];
-      //console.log("g00", g00);
       var g10 = row[ci];
-      //console.log("g10", g10);
       if (this.isValue(g00) && this.isValue(g10) && (row = this.grid[cj])) {
         var g01 = row[fi];
-        //console.log("g01", g01);
         var g11 = row[ci];
-        //console.log("g11", g11);
         if (this.isValue(g01) && this.isValue(g11)) {
           // All four points found, so interpolate the value.
           return this.bilinearInterpolateVector(i - fi, j - fj, g00, g10, g01, g11);

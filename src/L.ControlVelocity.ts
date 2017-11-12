@@ -21,11 +21,6 @@ export default class VelocityControl {
     };
   }
 
-  delegate(del: any): VelocityControl {
-    this._delegate = del;
-    return this;
-  }
-
   setWindy(_windy:any){
     if(!this._windy && _windy) this._windy = _windy;
   }
@@ -40,7 +35,7 @@ export default class VelocityControl {
     L.DomEvent.disableClickPropagation(this._container);
     this._map.on('mousemove', (ev: any) => {
       console.log("Mouse up event")
-      this._drawWindSpeed(ev);
+      this.drawWindSpeed(ev);
     });
     this._container.innerHTML = this.options.emptyString;
     return this._container;
@@ -92,26 +87,19 @@ export default class VelocityControl {
     return meters * 3.6
   }
 
-  _drawWindSpeed(ev: any) {
-    var pos = this._map.containerPointToLatLng(L.point(ev.containerPoint.x, ev.containerPoint.y));
+  drawWindSpeed(ev: any) {
+    const pos = this._map.containerPointToLatLng(L.point(ev.containerPoint.x, ev.containerPoint.y));
     var gridValue = this._windy.interpolate(pos.lng, pos.lat);
-    var htmlOut = "";
-    console.log("Grid value ", gridValue);
+    var template = "";
     if (gridValue && !isNaN(gridValue[0]) && !isNaN(gridValue[1]) && gridValue[2]) {
-      htmlOut = "<strong>  Direction: </strong>" +
+      template = "<strong>  Direction: </strong>" +
         this.vectorToDegrees(gridValue[0], gridValue[1], this.options.angleConvention).toFixed(3) +
         "°" + ", <thisstrong>  Speed: </strong>" +
         this.vectorToSpeed(gridValue[0], gridValue[1], "m/s").toFixed(1)+ " m/s";
     }
     else {
-      htmlOut = this.options.displayOptions.emptyString;
+      template = this.options.displayOptions.emptyString;
     }
-    this._container.innerHTML = htmlOut;
-    /* move control to bottom row
-    if(L.DomUtil.empty(document.getElementById('leaflet-control-velocity'))){
-      let velocityElement = document.getElementById('leaflet-control-velocity');
-      let mousepositionElement = document.getElementById('leaflet-control-mouseposition');
-      mousepositionElement.parentNode.insertBefore(velocityElement, mousepositionElement.nextSibling);
-    }*/
+    this._container.innerHTML = template;
   }
 }

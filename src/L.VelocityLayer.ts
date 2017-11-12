@@ -149,7 +149,7 @@ export default class VelocityLayer {
     if (!this._mouseControl && this.options.displayValues) {
       var options = this.options.displayOptions || {};
       options['leafletVelocity'] = this;
-      this._mouseControl = L_controlVelocity().delegate(this);
+      this._mouseControl = L_controlVelocity();
       this._mouseControl.setWindy(this._windy);
       this._mouseControl.setOptions(this.options.displayOptions);
       this._mouseControl.addTo(this._map);

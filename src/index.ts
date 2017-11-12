@@ -16,7 +16,7 @@ L.canvasLayer = function () {
 	return new L.CanvasLayer();
 };
 
-L.ControlVelocity = (L.Control).extend(new VelocityControl);
+L.ControlVelocity = (L.Control).extend(new VelocityControl());
 L.controlVelocity = function() {
   return new L.ControlVelocity();
 };
