@@ -8,12 +8,12 @@ import * as L from 'leaflet';
 
 
 const L_CanvasLayer = (L.Layer ? L.Layer : L.Class).extend(new CanvasLayer());
-let L_canvasLayer = function() {
+const L_canvasLayer = function() {
   return new L_CanvasLayer();
 };
 
 const L_ControlVelocity = (L.Control).extend(new VelocityControl);
-let L_controlVelocity = function() {
+const L_controlVelocity = function() {
   return new L_ControlVelocity();
 };
 
