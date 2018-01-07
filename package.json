@@ -1,14 +1,22 @@
 {
   "name": "leaflet-velocity-ts",
   "version": "1.0.0",
-  "description": "",
+  "description": "Visualise velocity layers with leaflet (Typescript fork)",
   "main": "dist/bundle.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "webpack",
     "watch": "webpack --progress --colors --watch"
   },
-  "author": "",
+  "author": "Dan Wild <danwild@y7mail.com>",
+  "contributors": [
+    "Cyrille Meichel <me@noopy.fr>",
+    "Jordan Nijean <me@jordan-nijean.com>"
+  ],
+  "repository": {
+    "url": "https://github.com/0nza1101/leaflet-velocity-ts",
+    "type": "git"
+  },
   "license": "ISC",
   "devDependencies": {
     "css-loader": "^0.28.8",
