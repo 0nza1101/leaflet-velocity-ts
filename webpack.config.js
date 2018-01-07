@@ -30,7 +30,7 @@ module.exports = {
     extensions: [".tsx", ".ts", ".js", ".css"]
   },
   output: {
-    filename: 'bundle.js',
+    filename: 'leaflet-velocity.js',
     path: path.resolve(__dirname, 'dist'),
     libraryTarget: 'umd'
   }

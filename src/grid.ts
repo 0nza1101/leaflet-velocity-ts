@@ -7,7 +7,7 @@ export default class Grid {
     private Δλ: number;
     private Δφ: number;
     private height: number;
-    private width: number; 
+    private width: number;
 
     constructor (data: Vector[], φ0: number, λ0: number, Δφ: number, Δλ: number, height: number, width: number) {
         this.data = data;
@@ -55,14 +55,23 @@ export default class Grid {
         const vφ = fφ - iφ;   // line variation [0..1]
 
         if (iλ>=0 && iφ>=0 && iλ<this.width && iφ<this.height) {
-            return this.interpolation (
-                vλ,
-                vφ,
-                this.data[iλ + iφ * this.width], //l0c0
-                this.data[jλ + iφ * this.width], //l0c1
-                this.data[iλ + jφ * this.width], //l1c0 
-                this.data[jλ + jφ * this.width]  //l1cl
-            );
+          let g00 = this.data[iλ + iφ * this.width];
+          let g10 = this.data[jλ + iφ * this.width];
+
+          if (this.isValue(g00) && this.isValue(g10)){
+            let g01 = this.data[iλ + jφ * this.width];
+            let g11 = this.data[jλ + jφ * this.width];
+            if (this.isValue(g01) && this.isValue(g11)) {
+              return this.interpolation (
+                  vλ,
+                  vφ,
+                  g00, //l0c0
+                  g10, //l0c1
+                  g01, //l1c0
+                  g11  //l1cl
+              );
+            }
+          }
         }
 
         return new Vector(0,0);
@@ -80,14 +89,14 @@ export default class Grid {
      * @return interpolated vector
      */
     interpolation (x: number, y: number, g00: Vector, g10:Vector, g01: Vector, g11: Vector): Vector {
-        const rx = (1 - x);
-        const ry = (1 - y);
-        const a = rx * ry;
-        const b = x * ry;
-        const c = rx * y;
-        const d = x * y;
-        const u = g00.u * a + g10.u * b + g01.u * c + g11.u * d;
-        const v = g00.v * a + g10.v * b + g01.v * c + g11.v * d;
+        var rx = (1 - x);
+        var ry = (1 - y);
+        var a = rx * ry,
+            b = x * ry,
+            c = rx * y,
+            d = x * y;
+        var u = g00.u * a + g10.u * b + g01.u * c + g11.u * d;
+        var v = g00.v * a + g10.v * b + g01.v * c + g11.v * d;
         return new Vector(u, v);
     }
 

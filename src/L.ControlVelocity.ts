@@ -96,10 +96,11 @@ export default class VelocityControl {
       template = "<strong>  Direction: </strong>" +
         this.vectorToDegrees(gridValue[0], gridValue[1], this.options.angleConvention).toFixed(3) +
         "°" + ", <thisstrong>  Speed: </strong>" +
-        this.vectorToSpeed(gridValue[0], gridValue[1], "m/s").toFixed(1)+ " m/s";
+        this.vectorToSpeed(gridValue[0], gridValue[1], this.options.speedUnit).toFixed(1)+ ` ${this.options.speedUnit}`;
     }
     else {
-      template = this.options.displayOptions.emptyString;
+      if(this.options.emptyString)
+        template = this.options.emptyString;
     }
     this._container.innerHTML = template;
   }
