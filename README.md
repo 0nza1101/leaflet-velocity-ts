@@ -10,16 +10,16 @@ This is a typescript updated version of [leaflet-velocity](https://github.com/da
 ## Example use:
 ```javascript
 var velocityLayer = L.velocityLayer({
-
+	
 	displayValues: true,
 	displayOptions: {
 		velocityType: 'Global Wind',
-		position: 'bottomleft',
-		emptyString: 'No velocity data',
+		position: 'bottomleft',//REQUIRED !
+		emptyString: 'No velocity data',//REQUIRED !
 		angleConvention: 'bearingCW',
 		displayPosition: 'bottomleft',
 		displayEmptyString: 'No velocity data',
-		speedUnit: 'kt'
+		speedUnit: 'm/s'
 	},
 	data: data,            // see demo/*.json, or wind-js-server for example data service
 
