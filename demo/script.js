@@ -22,7 +22,7 @@ var velocity = L.velocityLayer({
   // OPTIONAL
   /*minVelocity: 0,          // used to align color scale
   maxVelocity: 10,         // used to align color scale*/
-  maxVelocity: 10
+  maxVelocity: 10,
 });
 velocity.addTo(mymap);
 
