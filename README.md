@@ -1,4 +1,4 @@
-# leaflet-velocity
+# leaflet-velocity [![NPM version][npm-image]][npm-url] [![NPM Downloads][npm-downloads-image]][npm-url]
 
 This is a typescript updated version of [leaflet-velocity](https://github.com/danwild/leaflet-velocity) compatible with the latest version of leaflet.
 
@@ -29,3 +29,9 @@ var velocityLayer = L.velocityLayer({
 
 velocityLayer.addTo(mymap);
 ```
+## License
+MIT License (MIT)
+
+[npm-image]: https://badge.fury.io/js/leaflet-velocity-ts.svg
+[npm-url]: https://www.npmjs.com/package/leaflet-velocity-ts
+[npm-downloads-image]: https://img.shields.io/npm/dt/express.svg?style=flat-square
