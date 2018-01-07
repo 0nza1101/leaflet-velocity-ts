@@ -1,4 +1,4 @@
-# leaflet-velocity [![NPM version][npm-image]][npm-url]
+# leaflet-velocity-ts [![NPM version][npm-image]][npm-url]
 
 This is a typescript updated version of [leaflet-velocity](https://github.com/danwild/leaflet-velocity) compatible with the latest version of leaflet.
 
