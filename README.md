@@ -32,5 +32,6 @@ velocityLayer.addTo(mymap);
 ## License
 MIT License (MIT)
 
+
 [npm-image]: https://badge.fury.io/js/leaflet-velocity-ts.svg
 [npm-url]: https://www.npmjs.com/package/leaflet-velocity-ts
