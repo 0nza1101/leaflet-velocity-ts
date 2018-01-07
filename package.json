@@ -1,5 +1,5 @@
 {
-  "name": "simple-leaflet",
+  "name": "leaflet-velocity-ts",
   "version": "1.0.0",
   "description": "",
   "main": "script.js",
@@ -11,9 +11,14 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "css-loader": "^0.28.8",
+    "node-sass": "^4.7.2",
+    "sass-loader": "^6.0.6",
+    "style-loader": "^0.19.1",
     "ts-loader": "^3.1.1",
     "typescript": "^2.6.1",
-    "webpack": "^3.8.1"
+    "typings-for-css-modules-loader": "^1.7.0",
+    "webpack": "^3.10.0"
   },
   "dependencies": {
     "@types/leaflet": "^1.2.0",

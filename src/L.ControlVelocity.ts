@@ -1,5 +1,6 @@
 import Windy from './windy';
 import * as L from 'leaflet';
+import * as velocitycss from './leaflet-velocity.css';
 
 
 export default class VelocityControl {
@@ -31,7 +32,7 @@ export default class VelocityControl {
 
   onAdd(map: any) {
     this._map = map;
-    this._container = L.DomUtil.create('div', 'leaflet-control-velocity');
+    this._container = L.DomUtil.create('div', velocitycss.leafletControlVelocity);
     L.DomEvent.disableClickPropagation(this._container);
     this._map.on('mousemove', (ev: any) => {
       console.log("Mouse up event")
