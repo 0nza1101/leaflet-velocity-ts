@@ -1,6 +1,6 @@
 {
   "name": "leaflet-velocity-ts",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Visualise velocity layers with leaflet (Typescript fork)",
   "main": "dist/bundle.js",
   "scripts": {
