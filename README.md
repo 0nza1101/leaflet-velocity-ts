@@ -1,8 +1,11 @@
 # leaflet-velocity-ts [![NPM version][npm-image]][npm-url]
 
-This is a typescript updated version of [leaflet-velocity](https://github.com/danwild/leaflet-velocity) compatible with the latest version of leaflet.
+This is a typescript updated version of [leaflet-velocity](https://github.com/danwild/leaflet-velocity)
 
-This version adds a better particles management when zooming and moving the map which causes better performance on mobile devices.
+### Compared to the other version :
+* This version is compatible with the latest version of leaflet.
+* This version adds a better particles management when zooming and moving the map which causes better performance on mobile devices.
+* This version does not need jQuery in order to work.
 
 ## Example use:
 ```javascript
