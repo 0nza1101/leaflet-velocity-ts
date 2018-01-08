@@ -6,11 +6,12 @@ This is a typescript updated version of [leaflet-velocity](https://github.com/da
 * This version is compatible with the latest version of leaflet.
 * This version adds a better particles management when zooming and moving the map which causes better performance on mobile devices.
 * This version does not need jQuery in order to work.
+* This version does not need leaflet-velocity.css to be included.
 
 ## Example use:
 ```javascript
 var velocityLayer = L.velocityLayer({
-	
+
 	displayValues: true,
 	displayOptions: {
 		velocityType: 'Global Wind',
