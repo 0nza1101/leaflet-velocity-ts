@@ -17,7 +17,7 @@ var velocityLayer = L.velocityLayer({
 		velocityType: 'Global Wind',
 		position: 'bottomleft',//REQUIRED !
 		emptyString: 'No velocity data',//REQUIRED !
-		angleConvention: 'bearingCW',
+		angleConvention: 'bearingCW',//REQUIRED !
 		displayPosition: 'bottomleft',
 		displayEmptyString: 'No velocity data',
 		speedUnit: 'm/s'

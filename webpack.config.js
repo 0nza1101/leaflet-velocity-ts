@@ -31,7 +31,6 @@ module.exports = {
   },
   output: {
     filename: 'leaflet-velocity.js',
-    path: path.resolve(__dirname, 'dist'),
-    libraryTarget: 'umd'
+    path: path.resolve(__dirname, 'dist')
   }
 };

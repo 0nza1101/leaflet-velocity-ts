@@ -1,4 +1,4 @@
-import * as L from 'leaflet';
+declare var L: any;
 
 export default class CanvasLayer {
 	private _map: any;
@@ -32,14 +32,14 @@ export default class CanvasLayer {
 		this._canvas.width = resizeEvent.newSize.x;
 		this._canvas.height = resizeEvent.newSize.y;
 	}
-	
+
 	//-------------------------------------------------------------
 	_onLayerDidMove () {
 		var topLeft = this._map.containerPointToLayerPoint([0, 0]);
 		L.DomUtil.setPosition(this._canvas, topLeft);
 		this.drawLayer();
 	}
-	
+
 	//-------------------------------------------------------------
 	getEvents () {
 		var events = {
@@ -53,7 +53,7 @@ export default class CanvasLayer {
 
 		return events;
 	}
-	
+
 	//-------------------------------------------------------------
 	onAdd (map: any) {
 		this._map = map;
@@ -100,7 +100,7 @@ export default class CanvasLayer {
 		map.addLayer(this);
 		return this;
 	}
-	
+
 	// --------------------------------------------------------------------------------
 	LatLonToMercator (latlon: L.LatLng) {
 		return {
@@ -131,7 +131,7 @@ export default class CanvasLayer {
 		});
 		this._frame = null;
 	}
-	
+
 	// -- L.DomUtil.setTransform from leaflet 1.0.0 to work on 0.0.7
 	//------------------------------------------------------------------------------
 	_setTransform (el: any, offset: any, scale: any) {

@@ -4,7 +4,7 @@ import MapBound from './mapBound';
 import Layer from "./layer";
 import CanvasLayer from './L.CanvasLayer';
 import VelocityControl from './L.ControlVelocity'
-import * as L from 'leaflet';
+declare var L: any;
 
 
 const L_CanvasLayer = (L.Layer ? L.Layer : L.Class).extend(new CanvasLayer());

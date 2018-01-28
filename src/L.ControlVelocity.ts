@@ -1,5 +1,5 @@
 import Windy from './windy';
-import * as L from 'leaflet';
+declare var L: any;
 import * as velocitycss from './leaflet-velocity.css';
 
 

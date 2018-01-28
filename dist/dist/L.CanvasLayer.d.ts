@@ -1,4 +1,3 @@
-import * as L from 'leaflet';
 export default class CanvasLayer {
     private _map;
     private _canvas;

@@ -1,6 +1,6 @@
 export default class ColorScale {
     private scale: string[] = [
-        "rgb(36,104, 180)",
+    "rgb(36,104, 180)",
 		"rgb(60,157, 194)",
 		"rgb(128,205,193 )",
 		"rgb(151,218,168 )",
