@@ -43,10 +43,9 @@ export default class VelocityControl {
   }
 
   onRemove(map: any) {
-    map.off('mousemove', (ev: any) => {
-       //console.log("Mouse up event")
-      //this._drawWindSpeed(ev);
-    });
+    this._map.off('mousemove', (ev: any) => {
+      this.drawWindSpeed(ev);
+    }, this);
   }
 
   vectorToSpeed(uMs: number, vMs: number, unit: string) {

@@ -167,9 +167,15 @@ export default class VelocityLayer {
   }
 
   _destroyWind() {
-    if (this._displayTimeout) clearTimeout(this._displayTimeout);
-    if (this._windy) this._windy.stop();
-    if (this._context) this._context.clearRect(0, 0, 3000, 3000);
+    if (this._displayTimeout)
+      clearTimeout(this._displayTimeout);
+    if (this._windy)
+      this._windy.stop();
+    if (this._context)
+      this._context.clearRect(0, 0, 3000, 3000);
+    if (this._mouseControl)
+      this._map.removeControl(this._mouseControl);
+    this._mouseControl = null;
     this._windy = null;
     this._map.removeLayer(this._canvasLayer);
   }
