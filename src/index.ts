@@ -25,5 +25,3 @@ L.VelocityLayer = (L.Layer ? L.Layer : L.Class).extend(new VelocityLayer());
 L.velocityLayer = function(options: any) {
 	return new L.VelocityLayer(options);
 };
-
-console.log(L)

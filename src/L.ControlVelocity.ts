@@ -34,18 +34,13 @@ export default class VelocityControl {
     this._map = map;
     this._container = L.DomUtil.create('div', velocitycss.leafletControlVelocity);
     L.DomEvent.disableClickPropagation(this._container);
-    this._map.on('mousemove', (ev: any) => {
-      //console.log("Mouse up event")
-      this.drawWindSpeed(ev);
-    });
+    this._map.on('mousemove', this.drawWindSpeed, this);
     this._container.innerHTML = this.options.emptyString;
     return this._container;
   }
 
   onRemove(map: any) {
-    this._map.off('mousemove', (ev: any) => {
-      this.drawWindSpeed(ev);
-    }, this);
+    this._map.off('mousemove', this.drawWindSpeed, this);
   }
 
   vectorToSpeed(uMs: number, vMs: number, unit: string) {

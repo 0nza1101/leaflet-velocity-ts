@@ -123,8 +123,10 @@ export default class VelocityLayer {
     this._canvasLayer._canvas.classList.add("velocity-overlay");
     (<any>this).onDrawLayer();
 
+    //TODO : Figure out why the event is called after the layer is removed
     this._map.on('dragstart', () => {
-      this._windy.stop();
+      if(this._windy)
+        this._windy.stop();
     });
 
     this._map.on('dragend', () => {
@@ -132,7 +134,8 @@ export default class VelocityLayer {
     });
 
     this._map.on('zoomstart', () => {
-      this._windy.stop();
+      if(this._windy)
+        this._windy.stop();
     });
 
     this._map.on('zoomend', () => {

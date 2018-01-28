@@ -24,7 +24,16 @@ var velocity = L.velocityLayer({
   maxVelocity: 10,         // used to align color scale*/
   maxVelocity: 10,
 });
-velocity.addTo(mymap);
+
+mymap.addLayer(velocity);
+
+function removeWind(){
+  mymap.removeLayer(velocity);
+}
+
+function addWind(){
+  mymap.addLayer(velocity);
+}
 
 /*setTimeout(function () {
 	velocity.setData(data);
