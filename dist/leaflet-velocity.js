@@ -172,6 +172,7 @@ var Windy = /** @class */ (function () {
         this.particuleLineWidth = options.lineWidth || 1;
         var frameRate = options.frameRate || 15;
         this.frameTime = 1000 / frameRate;
+        this.setOptions(options);
     }
     Object.defineProperty(Windy.prototype, "particuleCount", {
         get: function () {
@@ -181,6 +182,24 @@ var Windy = /** @class */ (function () {
         enumerable: true,
         configurable: true
     });
+    Windy.prototype.setOptions = function (data) {
+
+
+        if (data.hasOwnProperty("velocityScale"))
+            this.velocityScale = (data.velocityScale || 0.005) * (Math.pow(window.devicePixelRatio, 1 / 3) || 1);
+
+        if (data.hasOwnProperty("particleAge"))
+            this.particleAge = data.particleAge;
+
+        if (data.hasOwnProperty("lineWidth"))
+            this.particuleLineWidth = data.lineWidth;
+
+        if (data.hasOwnProperty("particleMultiplier"))
+            this.particuleMultiplier = data.particleMultiplier;
+
+        if (data.hasOwnProperty("frameRate"))
+            this.frameRate = 1000 / data.frameRate;
+    }
     /**
      * Load data
      * @param data
@@ -965,6 +984,26 @@ var VelocityLayer = /** @class */ (function () {
         }
         this.fire('load');
     };
+
+    VelocityLayer.prototype.setOptions = function (options) {
+
+        this.options = Object.assign(this.options, options);
+        if (options.hasOwnProperty("displayOptions")) {
+            this.options.displayOptions = Object.assign(this.options.displayOptions, options.displayOptions);
+            this._initMouseHandler(true);
+        }
+        if (options.hasOwnProperty("data")) {
+            this.options.data = options.data;
+        }
+        if (this._windy) {
+            this._windy.setOptions(options);
+            if (options.hasOwnProperty("data")) {
+                this._windy.setData(options.data);
+            }
+            this._clearAndRestart();
+        }
+        this.fire("load");
+    }
     /*------------------------------------ PRIVATE ------------------------------------------*/
     VelocityLayer.prototype.onDrawLayer = function (overlay, params) {
         var self = this;
