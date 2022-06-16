@@ -6,22 +6,22 @@ export default class CanvasBound {
     public xMax: number;
     public yMax: number;
 
-    constructor (xMin: number, yMin: number, xMax: number, yMax: number) {
+    constructor(xMin: number, yMin: number, xMax: number, yMax: number) {
         this.xMin = xMin;
         this.yMin = yMin;
         this.xMax = xMax;
         this.yMax = yMax;
     }
 
-    get width () : number {
+    get width(): number {
         return this.xMax - this.xMin;
     }
 
-    get height () : number {
+    get height(): number {
         return this.yMax - this.yMin;
     }
 
-    getRandomParticule(maxAge: number): Particule  {
+    getRandomParticule(maxAge: number): Particule {
         const x = Math.round(Math.floor(Math.random() * this.width) + this.xMin);
         const y = Math.round(Math.floor(Math.random() * this.height) + this.yMin);
         return new Particule(x, y, maxAge);

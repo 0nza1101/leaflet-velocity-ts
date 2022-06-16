@@ -8,12 +8,12 @@ declare var L: any;
 
 
 const L_CanvasLayer = (L.Layer ? L.Layer : L.Class).extend(new CanvasLayer());
-const L_canvasLayer = function() {
+const L_canvasLayer = function () {
   return new L_CanvasLayer();
 };
 
 const L_ControlVelocity = (L.Control).extend(new VelocityControl);
-const L_controlVelocity = function() {
+const L_controlVelocity = function () {
   return new L_ControlVelocity();
 };
 
@@ -24,8 +24,8 @@ export default class VelocityLayer {
   private _canvasLayer: any = null;
   private _windy: Windy = null;
   private _context: any = null;
-  private _displayTimeout: number = 0;
-  private _mouseControl: any  = null;
+  private _displayTimeout: ReturnType<typeof setTimeout> = null;
+  private _mouseControl: any = null;
 
   constructor() {
     this.options = {
@@ -34,8 +34,8 @@ export default class VelocityLayer {
         velocityType: 'Velocity',
         position: 'bottomleft',
         emptyString: 'No velocity data',
-				angleConvention: 'bearingCCW',
-				speedUnit: 'm/s'
+        angleConvention: 'bearingCCW',
+        speedUnit: 'm/s'
       },
       maxVelocity: 10, // used to align color scale
       colorScale: null,
@@ -86,7 +86,7 @@ export default class VelocityLayer {
 
     if (this._displayTimeout) clearTimeout(self._displayTimeout);
 
-    this._displayTimeout = setTimeout(function() {
+    this._displayTimeout = setTimeout(function () {
       self._startWindy();
     }, 150); // showing velocity is delayed
   }
@@ -125,7 +125,7 @@ export default class VelocityLayer {
 
     //TODO : Figure out why the event is called after the layer is removed
     this._map.on('dragstart', () => {
-      if(this._windy)
+      if (this._windy)
         this._windy.stop();
     });
 
@@ -134,7 +134,7 @@ export default class VelocityLayer {
     });
 
     this._map.on('zoomstart', () => {
-      if(this._windy)
+      if (this._windy)
         this._windy.stop();
     });
 

@@ -18,46 +18,46 @@ export default class layer {
      * @param y 
      * return [lng, lat]
      */
-    canvasToMap (x: number, y: number): number[] {
+    canvasToMap(x: number, y: number): number[] {
         const mapLonDelta = this.mapBound.east - this.mapBound.west;
-        const worldMapRadius = (this.canvasBound.width / this.rad2deg(mapLonDelta)) * 360/(2 * Math.PI);
-        const mapOffsetY = ( worldMapRadius / 2 * Math.log( (1 + Math.sin(this.mapBound.south) ) / (1 - Math.sin(this.mapBound.south))  ));
+        const worldMapRadius = (this.canvasBound.width / this.rad2deg(mapLonDelta)) * 360 / (2 * Math.PI);
+        const mapOffsetY = (worldMapRadius / 2 * Math.log((1 + Math.sin(this.mapBound.south)) / (1 - Math.sin(this.mapBound.south))));
         const equatorY = this.canvasBound.height + mapOffsetY;
-        const a = (equatorY-y)/worldMapRadius;
+        const a = (equatorY - y) / worldMapRadius;
 
-        const φ = 180/Math.PI * (2 * Math.atan(Math.exp(a)) - Math.PI/2);
+        const φ = 180 / Math.PI * (2 * Math.atan(Math.exp(a)) - Math.PI / 2);
         const λ = this.rad2deg(this.mapBound.west) + x / this.canvasBound.width * this.rad2deg(mapLonDelta);
         return [λ, φ];
     };
-        
-    mercY (φ: number): number {
-        return Math.log( Math.tan( φ / 2 + Math.PI / 4 ) );
+
+    mercY(φ: number): number {
+        return Math.log(Math.tan(φ / 2 + Math.PI / 4));
     };
-        
+
     /**
      * Project a point on the map
      * @param λ Longitude
      * @param φ Latitude
      * @return [x, y]
      */
-    mapToCanvas (λ: number, φ: number): number[] {
+    mapToCanvas(λ: number, φ: number): number[] {
         const ymin = this.mercY(this.mapBound.south);
         const ymax = this.mercY(this.mapBound.north);
-        const xFactor = this.canvasBound.width / ( this.mapBound.east - this.mapBound.west );
-        const yFactor = this.canvasBound.height / ( ymax - ymin );
+        const xFactor = this.canvasBound.width / (this.mapBound.east - this.mapBound.west);
+        const yFactor = this.canvasBound.height / (ymax - ymin);
 
-        let y = this.mercY(this.deg2rad(φ) );
+        let y = this.mercY(this.deg2rad(φ));
         const x = (this.deg2rad(λ) - this.mapBound.west) * xFactor;
         y = (ymax - y) * yFactor;
         return [x, y];
     };
 
 
-    deg2rad (deg: number): number {
+    deg2rad(deg: number): number {
         return deg * Math.PI / 180;
     };
 
-    rad2deg (rad: number): number {
+    rad2deg(rad: number): number {
         return rad * 180 / Math.PI;
     };
 
@@ -69,7 +69,7 @@ export default class layer {
      * @param y 
      * @return []
      */
-    distortion (λ: number, φ: number, x: number, y: number): number[] {
+    distortion(λ: number, φ: number, x: number, y: number): number[] {
         const τ = 2 * Math.PI;
         const H = Math.pow(10, -5.2);
         const hλ = λ < 0 ? H : -H;
@@ -88,7 +88,7 @@ export default class layer {
             (pφ[1] - y) / hφ
         ];
     }
-      
+
     /**
      * Calculate distortion of the wind vector caused by the shape of the projection at point (x, y). The wind
      * vector is modified in place and returned by this function.
@@ -100,7 +100,7 @@ export default class layer {
      * @param wind [u, v]
      * @return []
      */
-    distort (λ: number, φ: number, x: number, y: number, scale: number, wind: Vector): Vector {
+    distort(λ: number, φ: number, x: number, y: number, scale: number, wind: Vector): Vector {
         const u = wind.u * scale;
         const v = wind.v * scale;
         const d = this.distortion(λ, φ, x, y);
@@ -110,6 +110,4 @@ export default class layer {
         wind.v = d[1] * u + d[3] * v;
         return wind;
     }
-  
-
 }
