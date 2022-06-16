@@ -17,16 +17,16 @@ export default class VelocityControl {
       // Could be any combination of 'bearing' (angle toward which the flow goes) or 'meteo' (angle from which the flow comes)
       // and 'CW' (angle value increases clock-wise) or 'CCW' (angle value increases counter clock-wise)
       angleConvention: 'bearingCCW',
-	    // Could be 'm/s' for meter per second, 'k/h' for kilometer per hour or 'kt' for knots
-	    speedUnit: 'm/s'
+      // Could be 'm/s' for meter per second, 'k/h' for kilometer per hour or 'kt' for knots
+      speedUnit: 'm/s'
     };
   }
 
-  setWindy(_windy:any){
-    if(!this._windy && _windy) this._windy = _windy;
+  setWindy(_windy: any) {
+    if (!this._windy && _windy) this._windy = _windy;
   }
 
-  setOptions(options:any){
+  setOptions(options: any) {
     this.options = options;
   }
 
@@ -90,10 +90,10 @@ export default class VelocityControl {
       template = "<strong>  Direction: </strong>" +
         this.vectorToDegrees(gridValue[0], gridValue[1], this.options.angleConvention).toFixed(3) +
         "°" + ", <thisstrong>  Speed: </strong>" +
-        this.vectorToSpeed(gridValue[0], gridValue[1], this.options.speedUnit).toFixed(1)+ ` ${this.options.speedUnit}`;
+        this.vectorToSpeed(gridValue[0], gridValue[1], this.options.speedUnit).toFixed(1) + ` ${this.options.speedUnit}`;
     }
     else {
-      if(this.options.emptyString)
+      if (this.options.emptyString)
         template = this.options.emptyString;
     }
     this._container.innerHTML = template;

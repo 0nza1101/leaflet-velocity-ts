@@ -17,11 +17,11 @@ L.canvasLayer = function () {
 };
 
 L.ControlVelocity = (L.Control).extend(new VelocityControl());
-L.controlVelocity = function() {
-  return new L.ControlVelocity();
+L.controlVelocity = function () {
+	return new L.ControlVelocity();
 };
 
 L.VelocityLayer = (L.Layer ? L.Layer : L.Class).extend(new VelocityLayer());
-L.velocityLayer = function(options: any) {
+L.velocityLayer = function (options: any) {
 	return new L.VelocityLayer(options);
 };

@@ -20,11 +20,11 @@ export default class Particule {
         this.age = 0;
     }
 
-    get isDead () : boolean {
+    get isDead(): boolean {
         return this.age > this.maxAge;
     }
 
-    grow () {
+    grow() {
         this.age++;
     }
 }
