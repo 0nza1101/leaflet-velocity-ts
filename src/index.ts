@@ -3,7 +3,7 @@ import MapBound from "./mapBound";
 import Windy from "./windy";
 import CanvasLayer from "./L.CanvasLayer";
 import VelocityLayer from "./L.VelocityLayer";
-import VelocityControl from './L.ControlVelocity';
+import ControlVelocity from './L.ControlVelocity';
 
 (<any>window).CanvasBound = CanvasBound;
 (<any>window).MapBound = MapBound;
@@ -16,7 +16,7 @@ L.canvasLayer = function () {
 	return new L.CanvasLayer();
 };
 
-L.ControlVelocity = (L.Control).extend(new VelocityControl());
+L.ControlVelocity = (L.Control).extend(new ControlVelocity());
 L.controlVelocity = function () {
 	return new L.ControlVelocity();
 };

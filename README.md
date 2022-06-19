@@ -5,7 +5,6 @@ This is a typescript updated version of [leaflet-velocity](https://github.com/da
 ### Compared to the other version :
 * This version is compatible with the latest version of leaflet.
 * This version adds a better particles management when zooming and moving the map which gives better performance on mobile devices.
-* This version does not need jQuery in order to work.
 * This version does not need leaflet-velocity.css to be included.
 
 ## Example use:
