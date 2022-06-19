@@ -7,6 +7,18 @@ import Particule from "./particle";
 import AnimationBucket from "./animationBucket";
 import Layer from "./layer";
 
+export interface WindyOptions {
+  canvas: any;
+  data: any;
+  colorScale: string[];
+  maxVelocity: number;
+  minVelocity: number;
+  velocityScale: number;
+  particleAge: number;
+  particleMultiplier: number;
+  particlelineWidth: number;
+  frameRate: number;
+}
 export default class Windy {
 
   private grid: any;
@@ -19,9 +31,9 @@ export default class Windy {
   private canvas: any = null;
   private colorScale: ColorScale;
   private velocityScale: number;
-  private particuleMultiplier = 1 / 300;
+  private particleMultiplier = 1 / 300;
   private particleAge: number;
-  private particuleLineWidth: number;
+  private particleLineWidth: number;
   private autoColorRange = false;
 
   private layer: Layer;
@@ -33,7 +45,11 @@ export default class Windy {
   private then = 0;
 
 
-  constructor(options: any) {
+  constructor(options: WindyOptions) {
+    this.setOptions(options);
+  }
+
+  setOptions(options: WindyOptions) {
     this.canvas = options.canvas;
     if (options.minVelocity === undefined && options.maxVelocity === undefined) {
       this.autoColorRange = true;
@@ -42,15 +58,15 @@ export default class Windy {
     this.velocityScale = options.velocityScale || 0.01;
     this.particleAge = options.particleAge || 64;
     this.setData(options.data);
-    this.particuleMultiplier = options.particleMultiplier || 1 / 300;
-    this.particuleLineWidth = options.lineWidth || 1;
+    this.particleMultiplier = options.particleMultiplier || 1 / 300;
+    this.particleLineWidth = options.particlelineWidth || 1;
     const frameRate = options.frameRate || 15;
     this.frameTime = 1000 / frameRate;
   }
 
   get particuleCount() {
     const particuleReduction = ((/android|blackberry|iemobile|ipad|iphone|ipod|opera mini|webos/i).test(navigator.userAgent)) ? (Math.pow(window.devicePixelRatio, 1 / 3) || 1.6) : 1;
-    return Math.round(this.layer.canvasBound.width * this.layer.canvasBound.height * this.particuleMultiplier) * particuleReduction;
+    return Math.round(this.layer.canvasBound.width * this.layer.canvasBound.height * this.particleMultiplier) * particuleReduction;
   }
 
   /**
@@ -188,9 +204,8 @@ export default class Windy {
   }
 
   start(layer: Layer) {
-
     this.context2D = this.canvas.getContext("2d");
-    this.context2D.lineWidth = this.particuleLineWidth;
+    this.context2D.lineWidth = this.particleLineWidth;
     this.context2D.fillStyle = "rgba(0, 0, 0, 0.97)";
     this.context2D.globalAlpha = 0.6;
 
@@ -255,5 +270,4 @@ export default class Windy {
       this.animationLoop = null;
     }
   }
-
 }

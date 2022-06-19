@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "webpack --stats-modules --mode production",
-    "watch": "webpack --progress --colors --watch"
+    "watch": "webpack --progress --watch --mode development"
   },
   "author": "Dan Wild <danwild@y7mail.com>",
   "contributors": [

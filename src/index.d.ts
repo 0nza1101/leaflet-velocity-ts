@@ -1,15 +1,18 @@
-export type speedUnit = 'kt' | 'km'
+export type SpeedUnit = 'kt' | 'km'
 
-interface velocityOptions {
+export interface VelocityOptions {
     displayValues: boolean,
     displayOptions: {
-        velocityType: string,
+        showCardinal: boolean, // display cardinal direction alongside degrees
+        velocityType: string, // label prefix
+        directionString: string // "Direction", // direction label prefix
+        speedString: string // "Speed", // speed label prefix
         position: string,
         emptyString: string,
         angleConvention: string,
         displayPosition: string,
         displayEmptyString: string,
-        speedUnit: speedUnit
+        speedUnit: SpeedUnit
     },
     data: any,           // see demo/*.json, or wind-js-server for example data service
 
@@ -22,4 +25,4 @@ interface velocityOptions {
     onRemove: Function,       // callback function
 }
 
-export function velocityLayer(options: velocityOptions): L.Layer;
+export function velocityLayer(options: VelocityOptions): L.Layer;
