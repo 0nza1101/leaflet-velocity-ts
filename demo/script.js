@@ -9,13 +9,14 @@ var velocity = L.velocityLayer({
 
   displayValues: true,
   displayOptions: {
-    velocityType: 'GBR Wind',
+    // velocityType: 'GBR Wind',
     position: 'bottomleft',
     emptyString: 'No velocity data',
     angleConvention: 'bearingCW',
     displayPosition: 'bottomleft',
     displayEmptyString: 'No velocity data',
-    speedUnit: 'kt'
+    speedUnit: 'kt',
+    showCardinal: true,
   },
   data: data, // see demo/*.json, or wind-js-server for example data service
 
@@ -26,6 +27,8 @@ var velocity = L.velocityLayer({
   onAdd: null,
   onRemove: null
 });
+
+velocity.setOptions({velocityType: 'GBR Wind'});
 
 mymap.addLayer(velocity);
 

@@ -2,20 +2,8 @@ import Windy, { WindyOptions } from './windy';
 import CanvasBound from './canvasBound'
 import MapBound from './mapBound';
 import Layer from "./layer";
-import CanvasLayer from './L.CanvasLayer';
-import ControlVelocity from './L.ControlVelocity'
+
 declare var L: any;
-
-
-const L_CanvasLayer = (L.Layer ? L.Layer : L.Class).extend(new CanvasLayer());
-const L_canvasLayer = function () {
-  return new L_CanvasLayer();
-};
-
-const L_ControlVelocity = (L.Control).extend(new ControlVelocity);
-const L_controlVelocity = function () {
-  return new L_ControlVelocity();
-};
 
 export default class VelocityLayer {
   private options: any;
@@ -46,13 +34,33 @@ export default class VelocityLayer {
   }
 
   initialize(options: any) {
-    console.log('velocityLayer', options)
     L.Util.setOptions(this, options);
+  }
+
+  setOptions(options: any) {
+    L.Util.setOptions(this, options);
+    if (options.displayOptions) {
+      this._initMouseHandler(true);
+    }
+    
+    if (options.data) {
+      this.options.data = options.data;
+    }
+
+    if (this._windy) {
+      this._windy.setOptions(options);
+      if (options.data) {
+        this._windy.setData(options.data);
+      }
+      this._clearAndRestart();
+    }
+
+    (<any>this).fire("load");
   }
 
   onAdd(map: L.Map) {
     // create canvas, add overlay control
-    this._canvasLayer = L_canvasLayer().delegate(this);
+    this._canvasLayer = L.canvasLayer().delegate(this);
     this._canvasLayer.addTo(map);
 
     this._map = map;
@@ -82,8 +90,6 @@ export default class VelocityLayer {
   /*------------------------------------ PRIVATE ------------------------------------------*/
 
   onDrawLayer() {
-    var self = this;
-
     if (!this._windy) {
       this._initWindy();
       return;
@@ -93,10 +99,10 @@ export default class VelocityLayer {
       return;
     }
 
-    if (this._displayTimeout) clearTimeout(self._displayTimeout);
+    if (this._displayTimeout) clearTimeout(this._displayTimeout);
 
-    this._displayTimeout = setTimeout(function () {
-      self._startWindy();
+    this._displayTimeout = setTimeout(() => {
+      this._startWindy();
     }, 150); // showing velocity is delayed
   }
 
@@ -164,11 +170,15 @@ export default class VelocityLayer {
     this._initMouseHandler();
   }
 
-  _initMouseHandler() {
+  _initMouseHandler(unbind: boolean = false) {
+    if (unbind) {
+      this._map.removeControl(this._mouseControl);
+      this._mouseControl = false;
+    }
+
     if (!this._mouseControl && this.options.displayValues) {
-      var options = this.options.displayOptions || {};
-      // options['leafletVelocity'] = this;
-      this._mouseControl = L_controlVelocity();
+      const options = this.options.displayOptions || {};
+      this._mouseControl = L.control.velocity(options);
       this._mouseControl.setWindy(this._windy);
       this._mouseControl.setOptions(this.options.displayOptions);
       this._mouseControl.addTo(this._map);

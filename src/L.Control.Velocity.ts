@@ -17,13 +17,13 @@ export default class ControlVelocity {
   private options: DisplayOptions;
   private _windy: Windy = null;
   private _map: any = null;
-  private _delegate: any;
   private _container: any = null;
 
   constructor() {
     this.options = {
       position: 'bottomleft',
       emptyString: 'Unavailable',
+      velocityType: '',
       // Could be any combination of 'bearing' (angle toward which the flow goes) or 'meteo' (angle from which the flow comes)
       // and 'CW' (angle value increases clock-wise) or 'CCW' (angle value increases counter clock-wise)
       angleConvention: 'bearingCCW',
