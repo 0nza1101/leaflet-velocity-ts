@@ -3,14 +3,14 @@ declare var L: any;
 import velocitycss from './leaflet-velocity.css';
 
 interface DisplayOptions {
-    position: string,
-    emptyString: string,
-    angleConvention: string,
-    speedUnit: string,
-    showCardinal: boolean
-    velocityType?: string
-    directionString: string
-    speedString: string
+  position: string,
+  emptyString: string,
+  angleConvention: string,
+  speedUnit: string,
+  showCardinal: boolean
+  velocityType?: string
+  directionString: string
+  speedString: string
 }
 
 export default class ControlVelocity {
@@ -59,10 +59,12 @@ export default class ControlVelocity {
   vectorToSpeed(uMs: number, vMs: number, unit: string) {
     var velocityAbs = Math.sqrt(Math.pow(uMs, 2) + Math.pow(vMs, 2));
     // Default is m/s
-    if (unit === 'k/h') {
+    if (unit === "k/h") {
       return this.meterSec2kilometerHour(velocityAbs);
-    } else if (unit === 'kt') {
+    } else if (unit === "kt") {
       return this.meterSec2Knots(velocityAbs);
+    } else if (unit === "mph") {
+      return this.meterSec2milesHour(velocityAbs);
     } else {
       return velocityAbs;
     }
@@ -94,6 +96,11 @@ export default class ControlVelocity {
   meterSec2kilometerHour(meters: number) {
     return meters * 3.6
   }
+
+  meterSec2milesHour(meters: number) {
+    return meters * 2.23694;
+  }
+
 
   degreesToCardinalDirection(deg: number) {
     let cardinalDirection = ''

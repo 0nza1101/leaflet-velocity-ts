@@ -1,4 +1,4 @@
-export type SpeedUnit = 'kt' | 'km'
+export type SpeedUnit = 'kt' | 'k/h' | 'mph' | 'm/s';
 
 export interface VelocityOptions {
     displayValues: boolean,
