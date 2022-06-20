@@ -18,6 +18,7 @@ export interface WindyOptions {
   particleMultiplier: number;
   particlelineWidth: number;
   frameRate: number;
+  opacity: number;
 }
 export default class Windy {
 
@@ -35,6 +36,7 @@ export default class Windy {
   private particleAge: number;
   private particleLineWidth: number;
   private autoColorRange = false;
+  private opacity: number;
 
   private layer: Layer;
   private particules: Particule[] = [];
@@ -57,6 +59,7 @@ export default class Windy {
     this.colorScale = new ColorScale(options.minVelocity || 0, options.maxVelocity || 10, options.colorScale);
     this.velocityScale = options.velocityScale || 0.01;
     this.particleAge = options.particleAge || 64;
+    this.opacity = +options.opacity || 0.97
     this.setData(options.data);
     this.particleMultiplier = options.particleMultiplier || 1 / 300;
     this.particleLineWidth = options.particlelineWidth || 1;
@@ -206,7 +209,7 @@ export default class Windy {
   start(layer: Layer) {
     this.context2D = this.canvas.getContext("2d");
     this.context2D.lineWidth = this.particleLineWidth;
-    this.context2D.fillStyle = "rgba(0, 0, 0, 0.97)";
+    this.context2D.fillStyle = `rgba(0, 0, 0, ${this.opacity})`;
     this.context2D.globalAlpha = 0.6;
 
     this.layer = layer;
@@ -257,7 +260,7 @@ export default class Windy {
     );
     // Fade existing particle trails.
     this.context2D.globalCompositeOperation = "lighter";
-    this.context2D.globalAlpha = 0.9;
+    this.context2D.globalAlpha = this.opacity === 0 ? 0 : this.opacity * 0.9;
 
     this.animationBucket.draw(this.context2D);
   }
