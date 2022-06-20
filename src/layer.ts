@@ -2,6 +2,8 @@ import MapBound from "./mapBound";
 import CanvasBound from "./canvasBound";
 import Vector from "./vector";
 
+declare var L: any;
+
 export default class layer {
 
     public mapBound: MapBound;
@@ -17,7 +19,7 @@ export default class layer {
      * @param x 
      * @param y 
      * return [lng, lat]
-     */
+    **/
     canvasToMap(x: number, y: number): number[] {
         const mapLonDelta = this.mapBound.east - this.mapBound.west;
         const worldMapRadius = (this.canvasBound.width / this.rad2deg(mapLonDelta)) * 360 / (2 * Math.PI);
@@ -39,7 +41,7 @@ export default class layer {
      * @param λ Longitude
      * @param φ Latitude
      * @return [x, y]
-     */
+    **/
     mapToCanvas(λ: number, φ: number): number[] {
         const ymin = this.mercY(this.mapBound.south);
         const ymax = this.mercY(this.mapBound.north);
@@ -52,14 +54,27 @@ export default class layer {
         return [x, y];
     };
 
+    rad2deg(rad: number): number {
+        return rad * 180 / Math.PI;
+    };
 
     deg2rad(deg: number): number {
         return deg * Math.PI / 180;
     };
 
-    rad2deg(rad: number): number {
-        return rad * 180 / Math.PI;
+    /**
+     * EXPERIMENTAL from
+     * https://github.com/onaci/leaflet-velocity/commit/bd45ea9c399021851ecc98b97d4b126b64adcc8f
+     canvasToMap(x: number, y: number): number[] {
+        const latlon = this.mapBound.map.containerPointToLatLng(L.point(x,y));
+        return [latlon.lng, latlon.lat];
     };
+    
+    mapToCanvas(lat: number, lon: number): number[] {
+        const xy = this.mapBound.map.latLngToContainerPoint(L.latLng(lat,lon));
+        return [xy.x, xy.y];
+    }
+    **/
 
     /**
      * 
@@ -71,11 +86,14 @@ export default class layer {
      */
     distortion(λ: number, φ: number, x: number, y: number): number[] {
         const τ = 2 * Math.PI;
+        //    var H = Math.pow(10, -5.2); // 0.00000630957344480193
+        //    var H = 0.0000360;          // 0.0000360°φ ~= 4m  (from https://github.com/cambecc/earth/blob/master/public/libs/earth/1.0.0/micro.js#L13)
         //@see https://github.com/danwild/leaflet-velocity/issues/15#issuecomment-345260768
         const H = 5;
         const hλ = λ < 0 ? H : -H;
         const hφ = φ < 0 ? H : -H;
 
+        // TODO: finish
         const pλ = this.mapToCanvas(λ + hλ, φ);
         const pφ = this.mapToCanvas(λ, φ + hφ);
 
