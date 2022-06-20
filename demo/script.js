@@ -24,7 +24,7 @@ var velocity = L.velocityLayer({
   /*minVelocity: 0,          // used to align color scale
   maxVelocity: 10,         // used to align color scale*/
   maxVelocity: 10,
-  opacity: 0,
+  opacity: 0.9,
   onAdd: null,
   onRemove: null
 });

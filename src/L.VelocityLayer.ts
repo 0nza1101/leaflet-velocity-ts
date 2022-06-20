@@ -14,6 +14,7 @@ export default class VelocityLayer {
   private _displayTimeout: ReturnType<typeof setTimeout> = null;
   private _mapEvents: any = null
   private _mouseControl: any = null;
+  private _paneName: string = null;
 
   constructor() {
     this.options = {
@@ -29,7 +30,8 @@ export default class VelocityLayer {
       colorScale: null,
       onAdd: null,
       onRemove: null,
-      data: null
+      data: null,
+      paneName: "overlayPane"
     };
   }
 
@@ -40,9 +42,9 @@ export default class VelocityLayer {
   setOptions(options: any) {
     L.Util.setOptions(this, options);
     if (options.displayOptions) {
-      this._initMouseHandler(true);
+      this.initMouseHandler(true);
     }
-    
+
     if (options.data) {
       this.options.data = options.data;
     }
@@ -52,13 +54,25 @@ export default class VelocityLayer {
       if (options.data) {
         this._windy.setData(options.data);
       }
-      this._clearAndRestart();
+      this.clearAndRestart();
     }
 
     (<any>this).fire("load");
   }
 
   onAdd(map: L.Map) {
+    // determine where to add the layer
+    this._paneName = this.options.paneName || "overlayPane";
+
+    // fall back to overlayPane for leaflet < 1
+    let pane = map.getPanes().overlayPane;
+    if (map.getPane) {
+      // attempt to get pane first to preserve parent (createPane voids this)
+      pane = map.getPane(this._paneName);
+      if (!pane) {
+        pane = map.createPane(this._paneName);
+      }
+    }
     // create canvas, add overlay control
     this._canvasLayer = L.canvasLayer().delegate(this);
     this._canvasLayer.addTo(map);
@@ -70,7 +84,7 @@ export default class VelocityLayer {
   }
 
   onRemove(map: any) {
-    this._destroyWind();
+    this.destroyWind();
 
     if (this.options.onRemove)
       this.options.onRemove();
@@ -81,17 +95,15 @@ export default class VelocityLayer {
 
     if (this._windy) {
       this._windy.setData(data);
-      this._clearAndRestart();
+      this.clearAndRestart();
     }
 
     (<any>this).fire('load');
   }
 
-  /*------------------------------------ PRIVATE ------------------------------------------*/
-
   onDrawLayer() {
     if (!this._windy) {
-      this._initWindy();
+      this.initWindy();
       return;
     }
 
@@ -102,27 +114,27 @@ export default class VelocityLayer {
     if (this._displayTimeout) clearTimeout(this._displayTimeout);
 
     this._displayTimeout = setTimeout(() => {
-      this._startWindy();
+      this.startWindy();
     }, 150); // showing velocity is delayed
   }
 
-  _toggleEvents(bind: boolean = true) {
+  private toggleEvents(bind: boolean = true) {
     if (this._mapEvents === null) {
       this._mapEvents = {
         'dragstart': () => {
           this._windy.stop();
         },
         'dragend': () => {
-          this._clearAndRestart();
+          this.clearAndRestart();
         },
         'zoomstart': () => {
           this._windy.stop();
         },
         'zoomend': () => {
-          this._clearAndRestart();
+          this.clearAndRestart();
         },
         'resize': () => {
-          this._clearWind();
+          this.clearWind();
         }
       };
     }
@@ -134,26 +146,7 @@ export default class VelocityLayer {
     }
   }
 
-  _startWindy() {
-    var bounds = this._map.getBounds();
-    var size = this._map.getSize();
-
-    // bounds, width, height, extent
-    this._windy.start(
-      new Layer(
-        new MapBound(
-          bounds.getNorthEast().lat,
-          bounds.getNorthEast().lng,
-          bounds.getSouthWest().lat,
-          bounds.getSouthWest().lng
-        ),
-        new CanvasBound(0, 0, size.x, size.y)
-      )
-
-    );
-  }
-
-  _initWindy() {
+  private initWindy() {
     const options: WindyOptions = {
       ...this.options,
       canvas: this._canvasLayer._canvas
@@ -165,12 +158,13 @@ export default class VelocityLayer {
     this._canvasLayer._canvas.classList.add("velocity-overlay");
     this.onDrawLayer();
 
-    this._toggleEvents(true);
+    this.toggleEvents(true);
 
-    this._initMouseHandler();
+    this.initMouseHandler();
   }
 
-  _initMouseHandler(unbind: boolean = false) {
+
+  private initMouseHandler(unbind: boolean = false) {
     if (unbind) {
       this._map.removeControl(this._mouseControl);
       this._mouseControl = false;
@@ -185,17 +179,37 @@ export default class VelocityLayer {
     }
   }
 
-  _clearAndRestart() {
-    if (this._context) this._context.clearRect(0, 0, 3000, 3000);
-    if (this._windy) this._startWindy();
+  private startWindy() {
+    var bounds = this._map.getBounds();
+    var size = this._map.getSize();
+
+    // bounds, width, height, extent
+    this._windy.start(
+      new Layer(
+        new MapBound(
+          this._map,
+          bounds.getNorthEast().lat,
+          bounds.getNorthEast().lng,
+          bounds.getSouthWest().lat,
+          bounds.getSouthWest().lng
+        ),
+        new CanvasBound(0, 0, size.x, size.y)
+      )
+
+    );
   }
 
-  _clearWind() {
+  private clearAndRestart() {
+    if (this._context) this._context.clearRect(0, 0, 3000, 3000);
+    if (this._windy) this.startWindy();
+  }
+
+  private clearWind() {
     if (this._windy) this._windy.stop();
     if (this._context) this._context.clearRect(0, 0, 3000, 3000);
   }
 
-  _destroyWind() {
+  private destroyWind() {
     if (this._displayTimeout)
       clearTimeout(this._displayTimeout);
     if (this._windy)
@@ -206,7 +220,7 @@ export default class VelocityLayer {
       this._map.removeControl(this._mouseControl);
     this._mouseControl = null;
     this._windy = null;
-    this._toggleEvents(false);
+    this.toggleEvents(false);
     this._map.removeLayer(this._canvasLayer);
   }
 }
