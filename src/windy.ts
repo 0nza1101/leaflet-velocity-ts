@@ -47,10 +47,13 @@ export default class Windy {
 
   constructor(options: WindyOptions) {
     this.setOptions(options);
+    this.canvas = options.canvas;
+    if (options.data) {
+      this.setData(options.data);
+    }
   }
 
-  setOptions(options: WindyOptions) {
-    this.canvas = options.canvas;
+  public setOptions(options: WindyOptions) {
     if (options.minVelocity === undefined && options.maxVelocity === undefined) {
       this.autoColorRange = true;
     }
@@ -58,14 +61,14 @@ export default class Windy {
     this.velocityScale = options.velocityScale || 0.01;
     this.particleAge = options.particleAge || 64;
     this.opacity = +options.opacity || 0.97
-    this.setData(options.data);
+
     this.particleMultiplier = options.particleMultiplier || 1 / 300;
     this.particleLineWidth = options.particlelineWidth || 1;
     const frameRate = options.frameRate || 15;
     this.frameTime = 1000 / frameRate;
   }
 
-  get particuleCount() {
+  public get particuleCount() {
     const particuleReduction = ((/android|blackberry|iemobile|ipad|iphone|ipod|opera mini|webos/i).test(navigator.userAgent)) ? (Math.pow(window.devicePixelRatio, 1 / 3) || 1.6) : 1;
     return Math.round(this.layer.canvasBound.width * this.layer.canvasBound.height * this.particleMultiplier) * particuleReduction;
   }
@@ -74,7 +77,7 @@ export default class Windy {
    * Load data
    * @param data
    */
-  setData(data: any[]) {
+  public setData(data: any[]) {
     let uData: any = null;
     let vData: any = null;
     const grid: Vector[] = [];
@@ -145,29 +148,12 @@ export default class Windy {
     }
   }
 
-  floorMod(a: number, n: number) {
-    return a - n * Math.floor(a / n);
-  };
-
-  isValue(x: any) {
-    return x !== null && x !== undefined;
-  };
-
-  bilinearInterpolateVector(x: number, y: number, g00: any, g10: any, g01: any, g11: any) {
-    var rx = (1 - x);
-    var ry = (1 - y);
-    var a = rx * ry, b = x * ry, c = rx * y, d = x * y;
-    var u = g00.u * a + g10.u * b + g01.u * c + g11.u * d;
-    var v = g00.v * a + g10.v * b + g01.v * c + g11.v * d;
-    return [u, v, Math.sqrt(u * u + v * v)];
-  };
-
   /* Get interpolated grid value from Lon/Lat position
-  * @param λ {Float} Longitude
-  * @param φ {Float} Latitude
-  * @returns {Object}
-  */
-  interpolate(λ: number, φ: number): any {
+* @param λ {Float} Longitude
+* @param φ {Float} Latitude
+* @returns {Object}
+*/
+  public interpolate(λ: number, φ: number): any {
     if (!this.grid) {
       return null;
     }
@@ -194,17 +180,7 @@ export default class Windy {
     return null;
   };
 
-  getParticuleWind(p: Particule): Vector {
-    const lngLat = this.layer.canvasToMap(p.x, p.y);
-    const wind = this.grid.get(lngLat[0], lngLat[1]);
-    p.intensity = wind.intensity;
-    const mapArea = this.layer.mapBound.height * this.layer.mapBound.width;
-    var velocityScale = this.velocityScale * Math.pow(mapArea, 0.4);
-    this.layer.distort(lngLat[0], lngLat[1], p.x, p.y, velocityScale, wind);
-    return wind;
-  }
-
-  start(layer: Layer) {
+  public start(layer: Layer) {
     this.context2D = this.canvas.getContext("2d");
     this.context2D.lineWidth = this.particleLineWidth;
     this.context2D.fillStyle = `rgba(0, 0, 0, ${this.opacity})`;
@@ -223,7 +199,45 @@ export default class Windy {
     this.frame();
   }
 
-  frame() {
+  public stop() {
+    this.particules.splice(0, this.particules.length);
+    this.animationBucket.clear();
+    if (this.animationLoop) {
+      clearTimeout(this.animationLoop);
+      this.animationLoop = null;
+    }
+  }
+
+  private floorMod(a: number, n: number) {
+    return a - n * Math.floor(a / n);
+  };
+
+  private isValue(x: any) {
+    return x !== null && x !== undefined;
+  };
+
+  private bilinearInterpolateVector(x: number, y: number, g00: any, g10: any, g01: any, g11: any) {
+    var rx = (1 - x);
+    var ry = (1 - y);
+    var a = rx * ry, b = x * ry, c = rx * y, d = x * y;
+    var u = g00.u * a + g10.u * b + g01.u * c + g11.u * d;
+    var v = g00.v * a + g10.v * b + g01.v * c + g11.v * d;
+    return [u, v, Math.sqrt(u * u + v * v)];
+  };
+
+  private getParticuleWind(p: Particule): Vector {
+    const lngLat = this.layer.canvasToMap(p.x, p.y);
+    const wind = this.grid.get(lngLat[0], lngLat[1]);
+    p.intensity = wind.intensity;
+    const mapArea = this.layer.mapBound.height * this.layer.mapBound.width;
+    var velocityScale = this.velocityScale * Math.pow(mapArea, 0.4);
+    this.layer.distort(lngLat[0], lngLat[1], p.x, p.y, velocityScale, wind);
+    return wind;
+  }
+
+
+
+  private frame() {
     this.animationLoop = requestAnimationFrame(() => {
       this.frame()
     });
@@ -236,7 +250,7 @@ export default class Windy {
     }
   }
 
-  evolve() {
+  private evolve() {
     this.animationBucket.clear();
     this.particules.forEach((p: Particule) => {
       p.grow();
@@ -248,7 +262,7 @@ export default class Windy {
     });
   }
 
-  draw() {
+  private draw() {
     this.context2D.globalCompositeOperation = "destination-in";
     this.context2D.fillRect(
       this.layer.canvasBound.xMin,
@@ -261,14 +275,5 @@ export default class Windy {
     this.context2D.globalAlpha = this.opacity === 0 ? 0 : this.opacity * 0.9;
 
     this.animationBucket.draw(this.context2D);
-  }
-
-  stop() {
-    this.particules.splice(0, this.particules.length);
-    this.animationBucket.clear();
-    if (this.animationLoop) {
-      clearTimeout(this.animationLoop);
-      this.animationLoop = null;
-    }
   }
 }
