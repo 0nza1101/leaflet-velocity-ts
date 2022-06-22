@@ -1,28 +1,31 @@
 export type SpeedUnit = 'kt' | 'k/h' | 'mph' | 'm/s';
+export type Position = 'topleft' | 'topright' | 'bottomleft' | 'bottomright';
 
 export interface VelocityOptions {
     displayValues: boolean,
     displayOptions: {
-        showCardinal: boolean, // display cardinal direction alongside degrees
-        velocityType: string, // label prefix
-        directionString: string // "Direction", // direction label prefix
-        speedString: string // "Speed", // speed label prefix
-        position: string,
-        emptyString: string,
-        angleConvention: string,
-        displayPosition: string,
-        displayEmptyString: string,
-        speedUnit: SpeedUnit
+        speedUnit: SpeedUnit;
+        position: Position;
+        showCardinal: boolean;
+        angleConvention: string;
+        velocityType: string;
+        emptyString: string;
+        directionString: string;
+        speedString: string;
     },
-    data: any,           // see demo/*.json, or wind-js-server for example data service
-
+    data: any; // see demo/*.json, or wind-js-server for example data service
     // OPTIONAL
-    minVelocity: number,       // used to align color scale
-    maxVelocity: number,      // used to align color scale
-    velocityScale: number, // modifier for particle animations, arbitrarily defaults to 0.005
-    colorScale: string[],       // define your own array of hex/rgb colors
-    onAdd: Function,          // callback function
-    onRemove: Function,       // callback function
+    particleAge: number;
+    particleMultiplier: number;
+    particleLineWidth: number;
+    frameRate: number;
+    minVelocity: number;
+    maxVelocity: number;
+    velocityScale: number;
+    colorScale: string[];
+    opacity: number;
+    onAdd: Function;
+    onRemove: Function;
 }
 
 export function velocityLayer(options: VelocityOptions): L.Layer;

@@ -3,14 +3,14 @@ declare var L: any;
 import velocitycss from './leaflet-velocity.css';
 
 interface DisplayOptions {
-  position: string,
-  emptyString: string,
-  angleConvention: string,
-  speedUnit: string,
-  showCardinal: boolean
-  velocityType?: string
-  directionString: string
-  speedString: string
+  speedUnit: 'kt' | 'k/h' | 'mph' | 'm/s';
+  position: 'topleft' | 'topright' | 'bottomleft' | 'bottomright';
+  showCardinal: boolean;
+  angleConvention: string;
+  velocityType: string;
+  emptyString: string;
+  directionString: string;
+  speedString: string;
 }
 
 export default class ControlVelocity {
@@ -24,10 +24,7 @@ export default class ControlVelocity {
       position: 'bottomleft',
       emptyString: 'Unavailable',
       velocityType: '',
-      // Could be any combination of 'bearing' (angle toward which the flow goes) or 'meteo' (angle from which the flow comes)
-      // and 'CW' (angle value increases clock-wise) or 'CCW' (angle value increases counter clock-wise)
       angleConvention: 'bearingCCW',
-      // Could be 'm/s' for meter per second, 'k/h' for kilometer per hour or 'kt' for knots
       speedUnit: 'm/s',
       directionString: "Direction",
       speedString: "Speed",

@@ -2,13 +2,14 @@ import Windy, { WindyOptions } from './windy';
 import CanvasBound from './canvasBound'
 import MapBound from './mapBound';
 import Layer from "./layer";
+import CanvasLayer from './L.CanvasLayer';
 
 declare var L: any;
 
 export default class VelocityLayer {
   private options: any;
   private _map: L.Map = null;
-  private _canvasLayer: any = null;
+  private _canvasLayer: (CanvasLayer & L.Layer) = null;
   private _windy: Windy = null;
   private _context: any = null;
   private _displayTimeout: ReturnType<typeof setTimeout> = null;
@@ -40,8 +41,9 @@ export default class VelocityLayer {
   }
 
   setOptions(options: any) {
-    L.Util.setOptions(this, options);
+    this.options = {...this.options, ...options};
     if (options.displayOptions) {
+      this.options.displayOptions = {...this.options.displayOptions, ...options.displayOptions};
       this.initMouseHandler(true);
     }
 
@@ -149,13 +151,13 @@ export default class VelocityLayer {
   private initWindy() {
     const options: WindyOptions = {
       ...this.options,
-      canvas: this._canvasLayer._canvas
+      canvas: this._canvasLayer.getCanvas()
     }
     this._windy = new Windy(options);
 
     // prepare context global var, start drawing
-    this._context = this._canvasLayer._canvas.getContext('2d');
-    this._canvasLayer._canvas.classList.add("velocity-overlay");
+    this._context = this._canvasLayer.getCanvas().getContext('2d');
+    this._canvasLayer.getCanvas().classList.add("velocity-overlay");
     this.onDrawLayer();
 
     this.toggleEvents(true);
