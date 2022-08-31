@@ -44,7 +44,7 @@ const velocityLayer = L.velocityLayer({
 	// OPTIONAL
 	particleAge: 64,
 	particleMultiplier: 0.0033,
-	particleLineWidth: 1,
+	particlelineWidth: 1,
 	frameRate: 15,
 	minVelocity: 0,
 	maxVelocity: 10,
