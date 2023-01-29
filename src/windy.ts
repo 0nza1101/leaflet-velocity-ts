@@ -17,6 +17,7 @@ export interface WindyOptions {
   particlelineWidth: number;
   frameRate: number;
   opacity: number;
+  bounds: number[];
 }
 export default class Windy {
 
@@ -35,6 +36,7 @@ export default class Windy {
   private particleLineWidth: number;
   private autoColorRange = false;
   private opacity: number;
+  private bounds: number[] = null;
 
   private layer: Layer;
   private particules: Particule[] = [];
@@ -60,7 +62,8 @@ export default class Windy {
     this.colorScale = new ColorScale(options.minVelocity || 0, options.maxVelocity || 10, options.colorScale);
     this.velocityScale = options.velocityScale || 0.01;
     this.particleAge = options.particleAge || 64;
-    this.opacity = +options.opacity || 0.97
+    this.opacity = +options.opacity || 0.97;
+    this.bounds = options.bounds;
 
     this.particleMultiplier = options.particleMultiplier || 1 / 300;
     this.particleLineWidth = options.particlelineWidth || 1;
@@ -227,7 +230,18 @@ export default class Windy {
 
   private getParticuleWind(p: Particule): Vector {
     const lngLat = this.layer.canvasToMap(p.x, p.y);
-    const wind = this.grid.get(lngLat[0], lngLat[1]);
+
+    let wind;
+
+    if(this.bounds && 
+        (lngLat[0] < this.bounds[0] || lngLat[0] > this.bounds[2] ||
+        lngLat[1] < this.bounds[1] || lngLat[1] > this.bounds[3])) {
+
+        wind = new Vector(0, 0);
+        //console.log(lngLat);
+    } else {
+        wind = this.grid.get(lngLat[0], lngLat[1]);
+    }
     p.intensity = wind.intensity;
     const mapArea = this.layer.mapBound.height * this.layer.mapBound.width;
     var velocityScale = this.velocityScale * Math.pow(mapArea, 0.4);

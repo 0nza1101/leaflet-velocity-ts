@@ -32,7 +32,8 @@ export default class VelocityLayer {
       onAdd: null,
       onRemove: null,
       data: null,
-      paneName: "overlayPane"
+      paneName: "overlayPane",
+      bounds: null
     };
   }
 

@@ -57,6 +57,7 @@ const velocityLayer = L.velocityLayer({
 	// optional pane to add the layer, will be created if doesn't exist
 	// leaflet v1+ only (falls back to overlayPane for < v1)
 	paneName: "overlayPane",
+	bounds: [minLon, minLat, maxLon, laxLat]
 });
 
 velocityLayer.addTo(mymap);
